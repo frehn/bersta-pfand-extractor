@@ -6,8 +6,10 @@
 
 # Run Tests
 
-`pytest`
+Edit the file [`tests/resources/test_extract_pfand_spec.json`](tests/resources/test_extract_pfand_spec.json) to add test cases.
+
+Then run `pytest`.
 
 # Build Windows Executable
 
-`pyinstaller --onefile ui.py`
+`pyinstaller --onefile bersta/ui.py`

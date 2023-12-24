@@ -1,4 +1,4 @@
-from bersta import extract_pfand_from_bersta_rechnung
+from extract_pfand import extract_pfand_from_bersta_rechnung_as_string
 
 import tkinter as tk
 from tkinter import filedialog
@@ -13,10 +13,12 @@ def browse_file():
 def extract_pfand():
     file_path = file_path_label.cget("text")
     try:
-        result = extract_pfand_from_bersta_rechnung(file_path)
+        result = extract_pfand_from_bersta_rechnung_as_string(file_path)
         result_text.delete(1.0, tk.END)
         result_text.insert(tk.END, result)
     except Exception as e:
+        import traceback
+        traceback.print_tb(e)
         messagebox.showerror("Error", str(e))
 
 # Set up the root GUI window

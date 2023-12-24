@@ -1,6 +1,6 @@
 ui.spec
 build/
 dist/
-*.pdf
+**/*.pdf
 __pycache__/
 deprecated/

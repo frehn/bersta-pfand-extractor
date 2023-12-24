@@ -1,8 +1,12 @@
 # BerSta Pfand Extractor
 
-# Run
+# Run Application
 
-`python ui.py`
+`python bersta/ui.py`
+
+# Run Tests
+
+`pytest`
 
 # Build Windows Executable
 

@@ -1,15 +1,21 @@
 # BerSta Pfand Extractor
 
-# Run Application
+## Run Application
 
 `python bersta/ui.py`
 
-# Run Tests
+## Run Tests
 
-Edit the file [`tests/resources/test_extract_pfand_spec.json`](tests/resources/test_extract_pfand_spec.json) to add test cases.
+Create the file `tests/resources/test_extract_pfand_spec.json`
+([sample](tests/resources/test_extract_pfand_spec.json.sample))
+to add test cases.
 
 Then run `pytest`.
 
-# Build Windows Executable
+## Build Windows Executable
 
 `pyinstaller --onefile bersta/ui.py`
+
+## TODO
+
+- [ ] Fix test rechnung_3, rechnung_7: may have multiple sections of each pfandretouren/pfandausgaben

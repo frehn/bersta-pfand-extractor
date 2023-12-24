@@ -1,0 +1,37 @@
+[
+    {
+        "file": "rechnung_1.pdf",
+        "ausgaben": 29.71,
+        "retouren": 34.29
+    },
+    {
+        "file": "rechnung_2.pdf",
+        "ausgaben": 33.93,
+        "retouren": 17.03
+    },
+    {
+        "file": "rechnung_3.pdf",
+        "ausgaben": 37.68,
+        "retouren": 37.58
+    },
+    {
+        "file": "rechnung_4.pdf",
+        "ausgaben": 14.97,
+        "retouren": 26.49
+    },
+    {
+        "file": "rechnung_5.pdf",
+        "ausgaben": 16.07,
+        "retouren": 29.40
+    },
+    {
+        "file": "rechnung_6.pdf",
+        "ausgaben": 31.94,
+        "retouren": 15.40
+    },
+    {
+        "file": "rechnung_7.pdf",
+        "ausgaben": 39.12,
+        "retouren": 34.18
+    }
+]

@@ -1,9 +1,10 @@
 import json
 import pytest
 from bersta.extract_pfand import extract_pfand_from_bersta_rechnung
+import decimal
 
 with open('tests/resources/test_extract_pfand_spec.json', 'r') as file:
-    specs = json.load(file)
+    specs = json.load(file, parse_float=decimal.Decimal)
 
 test_data = [(spec["file"], spec["ausgaben"], spec["retouren"]) for spec in specs]
 

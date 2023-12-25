@@ -2,7 +2,7 @@
 
 ## Windows Download
 
-TODO
+Download the current version for Windows [here](https://github.com/frehn/bersta-pfand-extractor/releases/download/v1.0.0/bersta-pfand-extractor-1.0.0.zip).
 
 ## What is this?
 

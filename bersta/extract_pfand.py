@@ -94,11 +94,14 @@ def parse_value(value: str) -> decimal.Decimal:
     with_dot_comma = without_eur.replace(",", ".")
     return decimal.Decimal(with_dot_comma)
 
-def result_to_string(result: PfandExtractionResult):
-    ausgaben = [PFANDAUSGABEN_SECTION_HEADLINE, f'Zahlen: {result.ausgaben_values}', f'Summe: {result.ausgaben}']
-    retouren = [PFANDRETOUREN_SECTION_HEADLINE, f'Zahlen: {result.retouren_values}', f'Summe: {result.retouren}']
+def _result_to_string_array(headline: str, values: list[decimal.Decimal], sum: decimal.Decimal) -> list[str]:
+  return [f'{headline} Positionen:', os.linesep.join([f'{x}€' for x in values]), f'{headline} Summe: {sum}€']
 
-    return os.linesep.join(ausgaben + retouren)
+def result_to_string(result: PfandExtractionResult):
+    ausgaben = _result_to_string_array(PFANDAUSGABEN_SECTION_HEADLINE, result.ausgaben_values, result.ausgaben)
+    retouren = _result_to_string_array(PFANDRETOUREN_SECTION_HEADLINE, result.retouren_values, result.retouren)
+
+    return os.linesep.join(ausgaben + [''] + retouren)
 
 def datas_to_result(sections: list[PfandExtractionSection]) -> PfandExtractionResult:
     interesting_sections = [section for section in sections if is_in_any(section.headline, INTERESTING_SECTION_HEADLINES)]

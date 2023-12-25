@@ -9,6 +9,7 @@ def browse_file():
     if file_path:
         file_path_label.config(text=file_path)
         extract_button.config(state="normal")
+        result_text.delete(1.0, tk.END)
 
 def extract_pfand():
     file_path = file_path_label.cget("text")
@@ -40,7 +41,7 @@ extract_button = tk.Button(root, text="Extract Pfand", state="disabled", command
 extract_button.pack(pady=5)
 
 # Create a text widget to display the result
-result_text = tk.Text(root, height=10, width=50)
+result_text = tk.Text(root, height=30, width=40)
 result_text.pack(padx=10, pady=10)
 
 root.mainloop()

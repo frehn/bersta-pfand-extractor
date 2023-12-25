@@ -1,4 +1,4 @@
-ui.spec
+*.spec
 build/
 dist/
 **/*.pdf

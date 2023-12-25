@@ -1,4 +1,4 @@
-from extract_pfand import extract_pfand_from_bersta_rechnung_as_string
+from bersta.extract_pfand import extract_pfand_from_bersta_rechnung_as_string
 
 import tkinter as tk
 from tkinter import filedialog
@@ -22,6 +22,7 @@ def extract_pfand():
         traceback.print_tb(e)
         messagebox.showerror("Error", str(e))
 
+
 # Set up the root GUI window
 root = tk.Tk()
 root.title("BerSta Pfand Extractor")
@@ -44,4 +45,6 @@ extract_button.pack(pady=5)
 result_text = tk.Text(root, height=30, width=40)
 result_text.pack(padx=10, pady=10)
 
-root.mainloop()
+
+def run_ui():
+    root.mainloop()

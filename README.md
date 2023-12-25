@@ -20,7 +20,7 @@ this data from BerSta's PDF invoices:
 
 ### Running the application
 
-`python bersta/ui.py`
+`python -m bersta`
 
 ### Running the tests
 
@@ -32,4 +32,5 @@ Then run `pytest`.
 
 ### Building a Windows Executable
 
-`pyinstaller --onefile bersta/ui.py`
+Running `pyinstaller bersta/__main__.py`
+will package the application into the folder `dist/__main__`.

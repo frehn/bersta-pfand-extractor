@@ -1,8 +1,8 @@
-import fitz  # PyMuPDF
 from dataclasses import dataclass
 import re
 import os
 import decimal
+import fitz  # PyMuPDF
 
 decimal.getcontext().prec = 7
 decimal.getcontext().traps[decimal.FloatOperation] = True
@@ -13,10 +13,13 @@ SUMME_SECTION_HEADLINE = "Summe"
 LIEFERUNG_SECTION_HEADLINE = "LS.Nr."
 
 # Abschnitte, die für Pfand relevant sind
-INTERESTING_SECTION_HEADLINES = [PFANDAUSGABEN_SECTION_HEADLINE, PFANDRETOUREN_SECTION_HEADLINE]
+INTERESTING_SECTION_HEADLINES = [
+    PFANDAUSGABEN_SECTION_HEADLINE, PFANDRETOUREN_SECTION_HEADLINE]
 
 # Alle Abschnitte (um das Ende der Pfand-Abschnitte zu erkennen)
-ALL_SECTION_HEADLINES = INTERESTING_SECTION_HEADLINES + [SUMME_SECTION_HEADLINE, LIEFERUNG_SECTION_HEADLINE]
+ALL_SECTION_HEADLINES = INTERESTING_SECTION_HEADLINES + \
+    [SUMME_SECTION_HEADLINE, LIEFERUNG_SECTION_HEADLINE]
+
 
 @dataclass(frozen=True)
 class PositionInPdf:
@@ -29,25 +32,30 @@ class PositionInPdf:
     def __le__(self, other):
         return self < other or self == other
 
+
 @dataclass(frozen=True)
 class TextInPdf:
     position: PositionInPdf
     text: str
 
+
 def is_below(a: TextInPdf, b: TextInPdf):
     return a.page > b.page or a.y > b.y
+
 
 def is_in_any(x: str, ys: list[str]):
     for y in ys:
         if y in x:
             return True
-        
+
     return False
+
 
 @dataclass(frozen=True)
 class PfandExtractionSection:
     headline: str
     values: list[float]
+
 
 @dataclass(frozen=True)
 class PfandExtractionResult:
@@ -55,8 +63,6 @@ class PfandExtractionResult:
     ausgaben: float
     retouren_values: list[float]
     retouren: float
-
-
 
 
 def extract_text_with_positions(pdf_path, section_headlines) -> tuple[list[TextInPdf], list[TextInPdf]]:
@@ -72,7 +78,8 @@ def extract_text_with_positions(pdf_path, section_headlines) -> tuple[list[TextI
                 for line in b["lines"]:
                     for span in line["spans"]:
                         text = span["text"].strip()
-                        result = TextInPdf(position=PositionInPdf(page=page_num, y=span["bbox"][1]),text=text)
+                        result = TextInPdf(position=PositionInPdf(
+                            page=page_num, y=span["bbox"][1]), text=text)
                         if is_in_any(text, section_headlines):
                             headlines.append(result)
                         value_re = re.compile("-?[0-9]+,[0-9]+€")
@@ -83,28 +90,36 @@ def extract_text_with_positions(pdf_path, section_headlines) -> tuple[list[TextI
 
     return headlines, values
 
+
 def get_values(start: PositionInPdf, end: PositionInPdf, values: list[TextInPdf]) -> list[str]:
     if end is not None:
         return [value.text for value in values if start <= value.position and value.position <= end]
     else:
         return [value.text for value in values if start <= value.position]
-   
+
+
 def parse_value(value: str) -> decimal.Decimal:
     without_eur = value[:-1]
     with_dot_comma = without_eur.replace(",", ".")
     return decimal.Decimal(with_dot_comma)
 
-def _result_to_string_array(headline: str, values: list[decimal.Decimal], sum: decimal.Decimal) -> list[str]:
-  return [f'{headline} Positionen:', os.linesep.join([f'{x}€' for x in values]), f'{headline} Summe: {sum}€']
+
+def _result_to_string_array(headline: str, values: list[decimal.Decimal], sum_of_values: decimal.Decimal) -> list[str]:
+    return [f'{headline} Positionen:', os.linesep.join([f'{x}€' for x in values]), f'{headline} Summe: {sum_of_values}€']
+
 
 def result_to_string(result: PfandExtractionResult):
-    ausgaben = _result_to_string_array(PFANDAUSGABEN_SECTION_HEADLINE, result.ausgaben_values, result.ausgaben)
-    retouren = _result_to_string_array(PFANDRETOUREN_SECTION_HEADLINE, result.retouren_values, result.retouren)
+    ausgaben = _result_to_string_array(
+        PFANDAUSGABEN_SECTION_HEADLINE, result.ausgaben_values, result.ausgaben)
+    retouren = _result_to_string_array(
+        PFANDRETOUREN_SECTION_HEADLINE, result.retouren_values, result.retouren)
 
     return os.linesep.join(ausgaben + [''] + retouren)
 
+
 def datas_to_result(sections: list[PfandExtractionSection]) -> PfandExtractionResult:
-    interesting_sections = [section for section in sections if is_in_any(section.headline, INTERESTING_SECTION_HEADLINES)]
+    interesting_sections = [section for section in sections if is_in_any(
+        section.headline, INTERESTING_SECTION_HEADLINES)]
     ausgaben_values = []
     ausgaben = decimal.Decimal('0')
     retouren_values = []
@@ -123,12 +138,13 @@ def datas_to_result(sections: list[PfandExtractionSection]) -> PfandExtractionRe
 
     return PfandExtractionResult(ausgaben_values, ausgaben, retouren_values, retouren)
 
+
 def extract_pfand_from_bersta_rechnung(file) -> PfandExtractionResult:
-    sections_in_pdf, values = extract_text_with_positions(file, ALL_SECTION_HEADLINES)
+    sections_in_pdf, values = extract_text_with_positions(
+        file, ALL_SECTION_HEADLINES)
     section_datas = []
 
-    for i in range(0, len(sections_in_pdf)):
-        section = sections_in_pdf[i]
+    for i, section in enumerate(sections_in_pdf):
         start = section.position
 
         if i < len(sections_in_pdf)-1:
@@ -136,7 +152,8 @@ def extract_pfand_from_bersta_rechnung(file) -> PfandExtractionResult:
         else:
             end = None
         str_values = get_values(start, end, values)
-        section_datas.append(PfandExtractionSection(headline=section.text, values=[parse_value(v) for v in str_values]))
+        section_datas.append(PfandExtractionSection(
+            headline=section.text, values=[parse_value(v) for v in str_values]))
 
     return datas_to_result(section_datas)
 
